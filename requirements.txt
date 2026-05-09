@@ -1,0 +1,6 @@
+apache-airflow-providers-google==10.14.0
+apache-airflow-providers-http==4.10.0
+pandas
+requests==2.31.0
+vaderSentiment==3.3.2
+faker==24.0.0
