@@ -44,7 +44,7 @@ jobs:
           pytest tests/test_dag_integrity.py -v --tb=short
 
   dbt-compile-check:
-    name: dbt Compile Check
+    name: Dbt Compile Check
     runs-on: ubuntu-latest
 
     steps:
@@ -62,7 +62,9 @@ jobs:
 
       - name: Create dummy keyfile for compile check
         run: |
-          echo '{
+          mkdir -p include
+          cat > include/gcp_keyfile.json << 'EOF'
+          {
             "type": "service_account",
             "project_id": "nodal-triumph-495809-s2",
             "private_key_id": "dummy",
@@ -71,18 +73,19 @@ jobs:
             "client_id": "dummy",
             "auth_uri": "https://accounts.google.com/o/oauth2/auth",
             "token_uri": "https://oauth2.googleapis.com/token"
-          }' > include/gcp_keyfile.json
+          }
+          EOF
 
       - name: Create CI profiles
         run: |
-          cat > dbt/profiles.yml << 'EOF'
+          cat > dbt/profiles.yml << EOF
           ecommerce_dbt:
             target: ci
             outputs:
               ci:
                 type: bigquery
                 method: service-account
-                keyfile: include/gcp_keyfile.json
+                keyfile: $GITHUB_WORKSPACE/include/gcp_keyfile.json
                 project: nodal-triumph-495809-s2
                 dataset: staging
                 threads: 1
