@@ -1,4 +1,5 @@
 import json
+import sys
 import os
 import requests
 import pandas as pd
@@ -13,6 +14,15 @@ from airflow.providers.google.cloud.transfers.local_to_gcs import (
 from airflow.providers.google.cloud.operators.bigquery import (
     BigQueryInsertJobOperator,
 )
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "include"))
+try:
+    from callbacks import slack_on_failure, slack_on_success
+except ImportError:
+    def slack_on_failure(context):
+        print("Slack callback not available in this environment")
+    def slack_on_success(context):
+        print("Slack callback not available in this environment")
 
 # ── Constants ──────────────────────────────────────────────────────────────
 GCP_PROJECT    = "nodal-triumph-495809-s2"
@@ -36,6 +46,9 @@ default_args = {
     start_date=datetime(2024, 1, 1),
     schedule="0 */6 * * *",  # Every 6 hours
     catchup=False,
+    is_paused_upon_creation=False,
+    on_failure_callback=slack_on_failure,
+    on_success_callback=slack_on_success,
     tags=["etl", "finance", "sentiment"],
     doc_md="""
     ## Financial News ETL Pipeline

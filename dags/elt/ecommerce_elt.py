@@ -1,4 +1,5 @@
 import json
+import os
 import sys
 from datetime import datetime, timedelta
 
@@ -7,6 +8,15 @@ from airflow.operators.bash import BashOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import (
     GCSToBigQueryOperator,
 )
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "include"))
+try:
+    from callbacks import slack_on_failure, slack_on_success
+except ImportError:
+    def slack_on_failure(context):
+        print("Slack callback not available in this environment")
+    def slack_on_success(context):
+        print("Slack callback not available in this environment")
 
 sys.path.insert(0, "/opt/airflow/include")
 
@@ -22,17 +32,6 @@ default_args = {
 }
 
 
-def notify_on_failure(context):
-    """Called automatically when any task in this DAG fails."""
-    dag_id  = context["dag"].dag_id
-    task_id = context["task"].task_id
-    exec_dt = context["logical_date"]
-    print(
-        f"ALERT: Task failed | DAG: {dag_id} | "
-        f"Task: {task_id} | Date: {exec_dt}"
-    )
-    # In Phase 5 we will replace this print with a real Slack webhook
-
 
 @dag(
     dag_id="ecommerce_elt",
@@ -40,8 +39,10 @@ def notify_on_failure(context):
     start_date=datetime(2024, 1, 1),
     schedule="0 0 * * *",   # Every day at midnight
     catchup=False,
+    is_paused_upon_creation=False,
     tags=["elt", "ecommerce", "dbt"],
-    on_failure_callback=notify_on_failure,
+    on_failure_callback=slack_on_failure,
+    on_success_callback=slack_on_success,
     doc_md="""
     ## E-commerce ELT Pipeline
 
