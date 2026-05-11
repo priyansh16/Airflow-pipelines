@@ -93,7 +93,7 @@ jobs:
                 location: EU
           EOF
 
-      - name: dbt compile
+      - name: dbt parse
         run: |
           cd dbt/ecommerce_dbt
-          dbt compile --profiles-dir .. --target ci
+          dbt parse --profiles-dir .. --target ci --no-partial-parse

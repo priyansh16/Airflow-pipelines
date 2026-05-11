@@ -15,7 +15,10 @@ models:
         data_tests:
           - not_null
           - accepted_values:
-              values: ['page_view', 'add_to_cart', 'purchase', 'return']
+            config:
+              severity: error
+            values: ['page_view', 'add_to_cart', 'purchase', 'return']
+              
 
       - name: user_id
         data_tests:
@@ -37,4 +40,6 @@ models:
         data_tests:
           - not_null
           - accepted_values:
+              config:
+                severity: error
               values: ['mobile', 'desktop', 'tablet']
