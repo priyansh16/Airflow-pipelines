@@ -1,6 +1,7 @@
 .venv
 .env
 *.json
+logs/
 logs/scheduler/
 logs/dag_processor_manager/
 logs/dag_processor/
@@ -11,6 +12,9 @@ terraform/terraform.tfstate.backup
 __pycache__/
 include/gcp_keyfile.json
 .DS_Store
+**/.gitkeep
+**/.user.yml
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

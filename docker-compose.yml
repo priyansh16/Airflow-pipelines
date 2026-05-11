@@ -13,6 +13,7 @@ x-airflow-common: &airflow-common
     - ./include:/opt/airflow/include
     - ./logs:/opt/airflow/logs
     - ./requirements.txt:/requirements.txt
+    - ./dbt:/opt/airflow/dbt
   depends_on:
     postgres:
       condition: service_healthy

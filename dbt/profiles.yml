@@ -1,0 +1,25 @@
+ecommerce_dbt:
+  target: prod
+  outputs:
+
+    # Use this when running dbt from your laptop
+    local:
+      type: bigquery
+      method: service-account
+      keyfile: "../../include/gcp_keyfile.json"
+      project: nodal-triumph-495809-s2
+      dataset: staging
+      threads: 4
+      timeout_seconds: 300
+      location: EU
+
+    # Use this when running dbt from inside Docker (via Airflow)
+    prod:
+      type: bigquery
+      method: service-account
+      keyfile: "/opt/airflow/include/gcp_keyfile.json"
+      project: nodal-triumph-495809-s2
+      dataset: staging
+      threads: 4
+      timeout_seconds: 300
+      location: EU

@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: mart_revenue_daily
+    description: "Daily revenue rollup by country and device"
+    columns:
+      - name: event_date
+        data_tests:
+          - not_null
+      - name: total_revenue
+        data_tests:
+          - not_null
+
+  - name: mart_product_performance
+    description: "Product-level funnel and revenue metrics"
+    columns:
+      - name: product_id
+        data_tests:
+          - not_null
+          - unique
+      - name: total_revenue
+        data_tests:
+          - not_null

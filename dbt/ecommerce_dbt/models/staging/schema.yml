@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: stg_ecommerce_events
+    description: "Cleaned and typed e-commerce events from raw layer"
+    columns:
+      - name: event_id
+        description: "Unique event identifier"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: event_type
+        description: "Type of user action"
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['page_view', 'add_to_cart', 'purchase', 'return']
+
+      - name: user_id
+        data_tests:
+          - not_null
+
+      - name: unit_price
+        data_tests:
+          - not_null
+
+      - name: revenue
+        data_tests:
+          - not_null
+
+      - name: country
+        data_tests:
+          - not_null
+
+      - name: device_type
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['mobile', 'desktop', 'tablet']
