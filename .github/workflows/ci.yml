@@ -1,0 +1,96 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  dag-integrity-tests:
+    name: DAG Integrity Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Airflow and test dependencies
+        run: |
+          pip install --upgrade pip
+          pip install apache-airflow pytest
+          pip install apache-airflow-providers-google
+          pip install apache-airflow-providers-http
+          pip install vaderSentiment faker pandas requests
+
+      - name: Run DAG integrity tests
+        env:
+          AIRFLOW__CORE__UNIT_TEST_MODE: "True"
+          AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+        run: |
+          pytest tests/test_dag_integrity.py -v --tb=short
+
+  dbt-compile-check:
+    name: dbt Compile Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dbt
+        run: |
+          pip install dbt-bigquery==1.8.2
+
+      - name: Create dummy keyfile for compile check
+        run: |
+          echo '{
+            "type": "service_account",
+            "project_id": "nodal-triumph-495809-s2",
+            "private_key_id": "dummy",
+            "private_key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA2a2rwplBQLzHPZe5TnjMNDQa4gFXPNAXBTKCwQNe/HUFXKOL\n-----END RSA PRIVATE KEY-----\n",
+            "client_email": "dummy@nodal-triumph-495809-s2.iam.gserviceaccount.com",
+            "client_id": "dummy",
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token"
+          }' > include/gcp_keyfile.json
+
+      - name: Create CI profiles
+        run: |
+          cat > dbt/profiles.yml << 'EOF'
+          ecommerce_dbt:
+            target: ci
+            outputs:
+              ci:
+                type: bigquery
+                method: service-account
+                keyfile: include/gcp_keyfile.json
+                project: nodal-triumph-495809-s2
+                dataset: staging
+                threads: 1
+                timeout_seconds: 300
+                location: EU
+          EOF
+
+      - name: dbt compile
+        run: |
+          cd dbt/ecommerce_dbt
+          dbt compile --profiles-dir .. --target ci
