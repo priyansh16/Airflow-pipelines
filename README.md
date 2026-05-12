@@ -55,7 +55,6 @@ us version-controlled, tested business logic that lives alongside the warehouse.
 
 ## Tech stack
 
-.badge{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);font-size:13px;font-weight:500;color:var(--color-text-primary)}
 
 | Layer | Technology |
 |---|---|
