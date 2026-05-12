@@ -55,52 +55,20 @@ us version-controlled, tested business logic that lives alongside the warehouse.
 
 ## Tech stack
 
-<style>
-.stack-wrap{display:flex;flex-wrap:wrap;gap:10px;padding:8px 0}
 .badge{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);font-size:13px;font-weight:500;color:var(--color-text-primary)}
-.badge img{width:20px;height:20px;object-fit:contain}
-.group-label{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;width:100%;margin:8px 0 2px}
-</style>
 
-<div style="padding:4px 0">
-
-<div class="group-label">Orchestration</div>
-<div class="stack-wrap">
-  <div class="badge"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apacheairflow/apacheairflow-original.svg" alt="Airflow logo"><span>Apache Airflow</span></div>
-</div>
-
-<div class="group-label">Warehouse & Storage</div>
-<div class="stack-wrap">
-  <div class="badge"><img src="img/BigQuery-512-color.svg" alt="GCP logo"><span>BigQuery</span></div>
-  <div class="badge"><img src="img/Cloud_Storage-512-color.svg" alt="GCP logo"><span>Cloud Storage</span></div>
-</div>
-
-<div class="group-label">Transformation & Quality</div>
-<div class="stack-wrap">
-  <div class="badge"><img src="img/Dbt--Streamline-Svg-Logos.svg" alt="dbt logo"><span>dbt</span></div>
-  <div class="badge"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytest/pytest-original.svg" alt="pytest logo"><span>pytest</span></div>
-</div>
-
-<div class="group-label">Infrastructure & DevOps</div>
-<div class="stack-wrap">
-  <div class="badge"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg" alt="Terraform logo"><span>Terraform</span></div>
-  <div class="badge"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker logo"><span>Docker</span></div>
-  <div class="badge"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/githubactions/githubactions-original.svg" alt="GitHub logo"><span>GitHub Actions</span></div>
-</div>
-
-<div class="group-label">Alerting & Visualisation</div>
-<div class="stack-wrap">
-  <div class="badge"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/slack/slack-original.svg" alt="Slack logo"><span>Slack</span></div>
-  <div class="badge"><img src="img/Looker-512-color.svg" alt="GCP logo"><span>Looker Studio</span></div>
-</div>
-
-<div class="group-label">Languages</div>
-<div class="stack-wrap">
-  <div class="badge"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python logo"><span>Python</span></div>
-  <div class="badge"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="SQL logo"><span>SQL</span></div>
-</div>
-
-</div>
+| Layer | Technology |
+|---|---|
+| Orchestration | Apache Airflow 2.8 (TaskFlow API) |
+| Warehouse | Google BigQuery |
+| Storage | Google Cloud Storage |
+| Transformation | dbt (staging + mart layers) |
+| Data quality | dbt schema tests (15 tests) |
+| Infrastructure | Terraform |
+| CI/CD | GitHub Actions |
+| Alerting | Slack webhooks |
+| Dashboard | Looker Studio |
+| Local dev | Docker Compose |
 
 ## Live dashboard
 
